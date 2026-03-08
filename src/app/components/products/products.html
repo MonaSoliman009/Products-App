@@ -1,0 +1,44 @@
+<!-- <h4>selectedCatId : {{ selectedCatId }}</h4> -->
+
+
+<div class="row row-cols-1 row-cols-md-3 g-4 m-5">
+  @for (prd of filteredProducts; track prd.id; let i=$index,c=$count,l=$last,f=$first) {
+    <div class="col">
+      <!-- <div class="card" appHighlight defaultColor="green"  highlightColor="brown"> -->
+      <div class="card">
+        <!-- <div class="card"> -->
+        <!-- property binding -->
+        <img [src]="prd.imgUrl" class="card-img-top" alt="..." />
+        <div class="card-body">
+          <!-- <h5 class="card-title">{{ prd.name | uppercase }}</h5> -->
+          <!-- <h5 class="card-title">{{ prd.name | lowercase }}</h5> -->
+          <!-- <h5 class="card-title">{{ prd.name | titlecase }}</h5> -->
+          <h5 class="card-title">{{ prd.name | shorten: 5 }}</h5>
+
+          <p class="card-text">Price is : {{ prd.price | currency: 'EUR' : 'code' }}</p>
+
+          @switch (prd.quantity) {
+            @case (0) {
+              <p class="card-text">Quantity is : Out of stock</p>
+            }
+            @case (1) {
+              <p class="card-text">Quantity is : Last item</p>
+            }
+            @default {
+              <p class="card-text">Quantity is : {{ prd.quantity }}</p>
+            }
+          }
+          <input type="number" #quantityInp />
+          <button (click)="buy(prd.price, quantityInp.value)" [disabled]="prd.quantity == 0">
+            Buy
+          </button>
+        </div>
+      </div>
+    </div>
+  } @empty {
+    <h1>No products to view</h1>
+  }
+</div>
+
+<!-- <h2>{{date | date:'shortDate'}}</h2>
+<h3>Number is {{num|number:'2.2-3'}}</h3> -->

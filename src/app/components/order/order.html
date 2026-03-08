@@ -1,0 +1,23 @@
+<h3 class="my-5 text-center">Total order price is : {{ orderPrice }}</h3>
+
+<div class="mb-3 text-center">
+  <label for="" class="form-label">Categories</label>
+  <select
+    class="form-select form-select-lg w-50 m-auto"
+    name=""
+    id=""
+    [(ngModel)]="selectedCatId"
+  >
+    <option disabled selected value="0">Please Select category</option>
+    @for (cat of categories; track cat.id) {
+      <option [value]="cat.id">{{ cat.name }}</option>
+    }
+  </select>
+</div>
+
+<h5>-------------------- child start-----------------</h5>
+<app-products [sentSelectedCatId]="selectedCatId" (onTotalOrderPriceChanged)="setOrderPrice($event)"></app-products>
+<h5>-------------------- child end-----------------</h5>
+
+
+<button test>proces...</button>
