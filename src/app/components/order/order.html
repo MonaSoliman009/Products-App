@@ -9,7 +9,7 @@
     [(ngModel)]="selectedCatId"
   >
     <option disabled selected value="0">Please Select category</option>
-    @for (cat of categories; track cat.id) {
+    @for (cat of categories$|async; track cat.id) {
       <option [value]="cat.id">{{ cat.name }}</option>
     }
   </select>

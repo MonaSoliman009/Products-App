@@ -1,8 +1,12 @@
-<div class="card">
-  <img class="card-img-top w-50" [src]="product?.imgUrl" alt="Title" />
-  <div class="card-body">
-    <h4 class="card-title">{{product?.name}}</h4>
-    <p class="card-text">{{product?.price}}</p>
+@if (product$| async ;as product) {
+  <!-- <p>{{product |json}}</p> -->
+  <div class="card">
+    <img class="card-img-top w-50" [src]="product?.imgUrl" alt="Title" />
+    <div class="card-body">
+      <h4 class="card-title">{{ product?.name }}</h4>
+      <p class="card-text">{{ product?.price }}</p>
+    </div>
   </div>
-</div>
 
+  <a class="btn btn-primary" [routerLink]="['/details', 4]">Load forth product</a>
+}

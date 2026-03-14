@@ -1,29 +1,29 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { IProduct } from '../../models/iproduct';
-import { ICategory } from '../../models/icategory';
 import { FormsModule } from '@angular/forms';
-import { CurrencyPipe, DatePipe, DecimalPipe, LowerCasePipe, NgClass, NgStyle, TitleCasePipe, UpperCasePipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe, DatePipe, DecimalPipe, LowerCasePipe, TitleCasePipe, UpperCasePipe } from '@angular/common';
 import { Highlight } from '../../directives/highlight';
 import { ShortenPipe } from '../../pipes/shorten-pipe';
-import { StaticProducts } from '../../services/static-products';
 import { Router, RouterLink } from '@angular/router';
+import { ProductsApi } from '../../services/products-api';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-products',
   imports: [FormsModule, Highlight, UpperCasePipe, LowerCasePipe, TitleCasePipe, DatePipe,
-    CurrencyPipe, DecimalPipe, ShortenPipe, RouterLink],
+    CurrencyPipe, DecimalPipe, ShortenPipe, RouterLink,AsyncPipe],
   templateUrl: './products.html',
   styleUrl: './products.css',
 })
-export class Products implements OnChanges, AfterViewInit {
+export class Products implements OnChanges, AfterViewInit, OnInit {
   @Input('sentSelectedCatId') recievedCatId: number = 0
   @Output() onTotalOrderPriceChanged: EventEmitter<number>;
   @ViewChild('prdImg') productImgEle!: ElementRef
-  private staticProductsService = inject(StaticProducts)
+  private apiProductsService = inject(ProductsApi)
   private router = inject(Router)
-
-  products: IProduct[]
-  filteredProducts: IProduct[]
+  products$!: Observable<IProduct[]>
+  products: IProduct[] = []
+  filteredProducts: IProduct[] = []
   totalOrderPice: number = 0
   date = new Date()
   num: number = 123.879
@@ -31,11 +31,20 @@ export class Products implements OnChanges, AfterViewInit {
   classes2 = 'border border-1'
   // constructor(private staticProductsService:StaticProducts) {
   constructor() {
+    // this.products = this.staticProductsService.getAllProducts()
 
-    this.products = this.staticProductsService.getAllProducts()
-
-    this.filteredProducts = this.products
+    // this.filteredProducts = this.products
     this.onTotalOrderPriceChanged = new EventEmitter<number>()
+    this.products$ = this.apiProductsService.getAllProducts()
+
+  }
+
+  ngOnInit(): void {
+    // this.apiProductsService.getAllProducts().subscribe((res)=>{
+    //   this.products=this.filteredProducts=res
+    //    console.log(this.filteredProducts);
+
+    // })
   }
 
   buy(price: number, quantity: string) {
@@ -43,14 +52,14 @@ export class Products implements OnChanges, AfterViewInit {
     this.onTotalOrderPriceChanged.emit(this.totalOrderPice)
   }
   ngOnChanges(): void {
-    this.filteredProducts = this.staticProductsService.getProductsByCatId(this.recievedCatId)
+    // this.filteredProducts = this.staticProductsService.getProductsByCatId(this.recievedCatId)
   }
   ngAfterViewInit(): void {
     console.log(this.productImgEle.nativeElement.src);
 
   }
 
-  navigateToDetails(id:number) {
+  navigateToDetails(id: number) {
     //  this.router.navigate(['/details',id])
     this.router.navigateByUrl(`/details/${id}`)
   }

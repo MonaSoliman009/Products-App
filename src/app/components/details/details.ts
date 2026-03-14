@@ -1,21 +1,38 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { StaticProducts } from '../../services/static-products';
 import { IProduct } from '../../models/iproduct';
+import { Observable } from 'rxjs';
+import { ProductsApi } from '../../services/products-api';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-details',
-  imports: [],
+  imports: [RouterLink, AsyncPipe, JsonPipe],
   templateUrl: './details.html',
   styleUrl: './details.css',
 })
 export class Details implements OnInit {
-  private activatedRoute = inject(ActivatedRoute)
-  private staticProducts = inject(StaticProducts)
-  id: string = ''
-  product: IProduct|null = {} as IProduct
+  // private activatedRoute = inject(ActivatedRoute)
+  @Input() id: string = ''
+  private apiProductsSErvice = inject(ProductsApi)
+  private cdr = inject(ChangeDetectorRef)
+
+  product$!: Observable<IProduct>
+
+  // product: IProduct | null = {} as IProduct
   ngOnInit(): void {
-    this.id = this.activatedRoute.snapshot.params['id']
-    this.product = this.staticProducts.getProductById(this.id)
+    console.log(this.id);
+    this.product$ = this.apiProductsSErvice.getProductById(this.id)
+
+
+    // this.id = this.activatedRoute.snapshot.params['id']
+    // this.product = this.staticProducts.getProductById(this.id)
+
+    // this.activatedRoute.params.subscribe((newParam) => {
+    //   this.id = newParam['id']
+    //   this.product = this.staticProducts.getProductById(this.id)
+    //   this.cdr.detectChanges()
+    // })
   }
 }

@@ -1,7 +1,7 @@
 <!-- <h4>selectedCatId : {{ selectedCatId }}</h4> -->
 
 <div class="row row-cols-1 row-cols-md-4 g-4 m-5">
-  @for (prd of filteredProducts; track prd.id; let i=$index,c=$count,l=$last,f=$first) {
+  @for (prd of products$|async; track prd.id; let i=$index,c=$count,l=$last,f=$first) {
     <div class="col">
       <!-- <div class="card" appHighlight defaultColor="green"  highlightColor="brown"> -->
       <div class="card">

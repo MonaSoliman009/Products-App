@@ -1,0 +1,71 @@
+<h1>{{ prdName.errors | json }}</h1>
+<form class="w-50 m-auto my-5" #prdForm="ngForm" (ngSubmit)="addNewProduct()">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Name</label>
+    <input
+      type="text"
+      class="form-control"
+      id="exampleInputEmail1"
+      aria-describedby="emailHelp"
+      placeholder="Enter Name"
+      [(ngModel)]="product.name"
+      name="name"
+      required
+      minlength="3"
+      maxlength="10"
+      #prdName="ngModel"
+    />
+    @if (!prdName.valid && prdName.touched) {
+      @if (prdName.errors?.['required']) {
+        <p class="text-danger">Name is required</p>
+      }
+      @if (prdName.errors?.['minlength']) {
+        <p class="text-danger">Name must be at least 3 characters</p>
+      }
+    }
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Price</label>
+    <input
+      type="number"
+      class="form-control"
+      id="exampleInputPassword1"
+      placeholder="Price"
+      [(ngModel)]="product.price"
+      name="price"
+    />
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Quantity</label>
+    <input
+      type="number"
+      class="form-control"
+      id="exampleInputPassword1"
+      placeholder="Quantity"
+      [(ngModel)]="product.quantity"
+      name="quantity"
+    />
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Image</label>
+    <input
+      type="file"
+      class="form-control"
+      id="exampleInputPassword1"
+      placeholder="image"
+      [(ngModel)]="product.imgUrl"
+      name="imgUrl"
+    />
+  </div>
+
+  <div class="mb-3">
+    <label for="" class="form-label">Categories</label>
+    <select class="form-select form-select-lg" name="catId" [(ngModel)]="product.catId">
+      @for (cat of categories$ | async; track cat.id) {
+        <option [value]="cat.id">{{ cat.name }}</option>
+      }
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary" [disabled]="prdForm.invalid">Submit</button>
+</form>
